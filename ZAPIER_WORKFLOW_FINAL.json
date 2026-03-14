@@ -1,0 +1,60 @@
+{
+  "zap_name": "Exploit Analyzer - Complete Workflow",
+  "description": "Analyzes exploit text and generates security intelligence brief",
+  "steps": [
+    {
+      "step": 1,
+      "app": "Manual",
+      "event": "Manual Trigger",
+      "description": "Start the workflow manually"
+    },
+    {
+      "step": 2,
+      "app": "Formatter",
+      "event": "Set",
+      "description": "Set exploit text",
+      "fields": {
+        "exploit_text": "Euler Finance exploit involving flash loans and a donation attack that manipulated collateral accounting."
+      }
+    },
+    {
+      "step": 3,
+      "app": "Webhooks by Zapier",
+      "event": "POST",
+      "description": "Call FastAPI to generate brief",
+      "url": "http://localhost:8000/generate-brief",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "text": "{{step_2_exploit_text}}"
+      }
+    },
+    {
+      "step": 4,
+      "app": "Code by Zapier",
+      "event": "Run Javascript",
+      "description": "Format output to extract brief",
+      "code": "const brief = inputData.brief || inputData.brief;\nreturn { brief: brief };"
+    },
+    {
+      "step": 5,
+      "app": "Slack",
+      "event": "Send Channel Message",
+      "description": "Send brief to Slack (optional)",
+      "channel": "#security-alerts",
+      "message": "🚨 *Security Intelligence Brief*\n\n{{step_4_brief}}"
+    },
+    {
+      "step": 6,
+      "app": "Notion",
+      "event": "Create Database Item",
+      "description": "Save brief to Notion (optional)",
+      "database_id": "YOUR_DATABASE_ID",
+      "title": "{{step_3_title}}",
+      "brief": "{{step_4_brief}}"
+    }
+  ],
+  "notes": "Update the URL in step 3 to your public endpoint (ngrok or Railway URL)"
+}
