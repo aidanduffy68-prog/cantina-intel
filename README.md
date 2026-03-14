@@ -1,6 +1,6 @@
 # Crypto Exploit Intelligence API
 
-A FastAPI-based service for analyzing crypto exploits and generating security intelligence briefs.
+A FastAPI-based service for analyzing crypto exploits and generating structured security intelligence briefs using AI-powered analysis.
 
 ## Setup
 
@@ -66,33 +66,37 @@ Generates a Security Intelligence Brief from exploit text. Automatically perform
 
 ## Testing
 
-### Example: Euler Finance Exploit
+### Quick Test
 
-Test the API with a famous exploit. Copy the text from `test_exploit_euler.txt` or use the JSON payload from `test_payload.json`.
-
-**Quick Test:**
 1. Open `http://localhost:8000/docs` in your browser
-2. Navigate to `POST /analyze-exploit`
+2. Navigate to `POST /generate-brief`
 3. Click "Try it out"
-4. Paste the Euler Finance exploit text (from `test_exploit_euler.txt`) into the `exploit_text` field
+4. Use the example payload:
+   ```json
+   {
+     "text": "Euler Finance exploit involving flash loans and a donation attack that manipulated collateral accounting."
+   }
+   ```
 5. Click "Execute"
 
-**Expected Response:**
-The API will analyze the exploit and return structured intelligence including:
-- Protocol name: "Euler Finance"
-- Exploit type: "Flash loan attack" or "Donation attack"
-- Vulnerability pattern: Details about the accounting manipulation
-- Root cause: Missing checks in donation mechanism
-- Affected component: "donateToReserves function" or similar
-- Risk category: "Critical"
+The API will return a structured security intelligence brief with analysis and recommendations.
 
 ## Deployment
 
-See `RAILWAY_DEPLOY.md` for deployment instructions to Railway.
+Deploy to Railway:
+1. Push to GitHub
+2. Connect Railway to your GitHub repo
+3. Add `OPENAI_API_KEY` environment variable
+4. Railway auto-detects FastAPI and deploys
 
 ## Automation
 
-See `ZAPIER_SETUP.md` for Zapier automation setup.
+The API can be integrated with automation tools like Zapier:
+- Use webhook triggers to send exploit text
+- POST to `/generate-brief` endpoint
+- Receive structured security intelligence briefs
+
+See `ZAPIER_WORKFLOW_FINAL.json` for example workflow configuration.
 
 ## Documentation
 

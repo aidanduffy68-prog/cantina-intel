@@ -26,6 +26,6 @@ Thumbs.db
 # Logs
 *.log
 
-# Test files (optional - remove if you want to commit them)
-# test_*.txt
-# test_*.json
+# Test files
+test_*.txt
+test_*.json
