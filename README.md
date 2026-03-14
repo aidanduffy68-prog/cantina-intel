@@ -2,6 +2,60 @@
 
 A FastAPI-based service for analyzing crypto exploits and generating structured security intelligence briefs using AI-powered analysis.
 
+## 🚀 Live API
+
+**Production URL**: `https://cantina-intel-production.up.railway.app`
+
+**API Documentation**: https://cantina-intel-production.up.railway.app/docs
+
+## Architecture
+
+### System Overview
+
+```
+┌─────────────────┐
+│  Webhook/Zapier │ → Triggers workflow
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   FastAPI API   │ → Receives exploit text
+│  (Railway Host) │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  OpenAI GPT-4o  │ → Analyzes exploit
+│   (Analysis)    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  OpenAI GPT-4o  │ → Generates brief
+│  (Brief Gen)    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  JSON Response  │ → Returns structured brief
+└─────────────────┘
+```
+
+### Components
+
+- **FastAPI Backend**: Python-based REST API
+- **OpenAI Integration**: GPT-4o for exploit analysis and brief generation
+- **Railway Deployment**: Cloud-hosted with automatic CI/CD
+- **Zapier Automation**: Webhook-based workflow automation
+
+### Technology Stack
+
+- **Backend**: FastAPI (Python 3.11)
+- **AI**: OpenAI GPT-4o
+- **Deployment**: Railway
+- **Automation**: Zapier
+- **Dependencies**: See `requirements.txt`
+
 ## Setup
 
 1. Install dependencies:
@@ -10,7 +64,8 @@ pip install -r requirements.txt
 ```
 
 2. Configure environment variables:
-   - Copy `.env` and set your `OPENAI_API_KEY`
+   - Create `.env` file
+   - Add: `OPENAI_API_KEY=your_api_key_here`
 
 3. Run the application:
 ```bash
@@ -21,54 +76,80 @@ The API will be available at `http://localhost:8000`
 
 ## API Endpoints
 
-### POST /analyze-exploit
-Analyzes exploit report text and extracts structured intelligence.
-
-**Request Body:**
-```json
-{
-  "exploit_text": "Your exploit report text here..."
-}
-```
-
-**Response:**
-```json
-{
-  "protocol_name": "Protocol Name",
-  "exploit_type": "Exploit Type",
-  "vulnerability_pattern": "Vulnerability Pattern",
-  "root_cause": "Root cause explanation",
-  "affected_smart_contract_component": "Component name/function",
-  "risk_category": "Critical|High|Medium|Low"
-}
-```
-
 ### POST /generate-brief
+
 Generates a Security Intelligence Brief from exploit text. Automatically performs analysis first, then generates the brief.
 
-**Request Body:**
+**Example Request:**
+```bash
+curl -X POST https://cantina-intel-production.up.railway.app/generate-brief \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Euler Finance exploit involving flash loans and a donation attack that manipulated collateral accounting."
+  }'
+```
+
+**Example Response:**
 ```json
 {
-  "text": "Your exploit report text here..."
+  "title": "Critical Flash Loan Vulnerability in Euler Finance's Collateral Management Module",
+  "executive_summary": "A critical vulnerability in Euler Finance's collateral management module has been exploited through a flash loan attack. The flaw in the business logic allows attackers to manipulate collateral accounting, posing a severe risk to the protocol's integrity and user funds.",
+  "threat_level": "Critical",
+  "recommendations": [
+    "Conduct a comprehensive audit of the collateral management module",
+    "Implement stricter validation checks and state consistency mechanisms",
+    "Deploy real-time monitoring and anomaly detection systems",
+    "Enhance the security of the flash loan mechanism",
+    "Educate developers on secure coding practices"
+  ],
+  "brief": "Euler Finance, a decentralized finance protocol, has been compromised through a critical flash loan attack targeting its collateral management module. The exploit leverages incorrect state updates within the module, allowing attackers to manipulate the protocol's collateral accounting processes..."
 }
 ```
 
-**Response:**
+### POST /analyze-exploit
+
+Analyzes exploit report text and extracts structured intelligence.
+
+**Example Request:**
+```bash
+curl -X POST https://cantina-intel-production.up.railway.app/analyze-exploit \
+  -H "Content-Type: application/json" \
+  -d '{
+    "exploit_text": "Euler Finance exploit involving flash loans and a donation attack..."
+  }'
+```
+
+**Example Response:**
 ```json
 {
-  "title": "Brief Title",
-  "executive_summary": "Executive summary...",
-  "threat_level": "High",
-  "recommendations": ["Recommendation 1", "Recommendation 2"],
-  "brief": "Detailed brief..."
+  "protocol_name": "Euler Finance",
+  "exploit_type": "Flash loan attack",
+  "vulnerability_pattern": "State inconsistency in collateral accounting",
+  "root_cause": "Missing validation checks in donation mechanism",
+  "affected_smart_contract_component": "donateToReserves function",
+  "risk_category": "Critical"
 }
 ```
+
+## Automation Workflow
+
+The system is integrated with Zapier for automated exploit analysis:
+
+![Zapier Workflow](zapier-workflow.png)
+
+**Workflow Steps:**
+1. **Webhook Trigger** - Receives exploit text
+2. **Formatter** - Sets exploit_text field
+3. **HTTP Request** - POSTs to `/generate-brief` endpoint
+4. **Code** - Extracts and formats the brief field
+
+See `ZAPIER_WORKFLOW_FINAL.json` for complete workflow configuration.
 
 ## Testing
 
 ### Quick Test
 
-1. Open `http://localhost:8000/docs` in your browser
+1. Open https://cantina-intel-production.up.railway.app/docs in your browser
 2. Navigate to `POST /generate-brief`
 3. Click "Try it out"
 4. Use the example payload:
@@ -89,17 +170,12 @@ Deploy to Railway:
 3. Add `OPENAI_API_KEY` environment variable
 4. Railway auto-detects FastAPI and deploys
 
-## Automation
-
-The API can be integrated with automation tools like Zapier:
-- Use webhook triggers to send exploit text
-- POST to `/generate-brief` endpoint
-- Receive structured security intelligence briefs
-
-See `ZAPIER_WORKFLOW_FINAL.json` for example workflow configuration.
-
 ## Documentation
 
-Interactive API documentation is available at:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
+Interactive API documentation:
+- **Swagger UI**: https://cantina-intel-production.up.railway.app/docs
+- **ReDoc**: https://cantina-intel-production.up.railway.app/redoc
+
+## License
+
+MIT License
