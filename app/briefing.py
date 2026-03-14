@@ -65,7 +65,7 @@ Return only valid JSON with these exact keys."""
 
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-4o",
                 messages=[
                     {"role": "system", "content": "You are a security intelligence analyst creating briefs for security teams. Generate professional, actionable intelligence briefs."},
                     {"role": "user", "content": prompt}

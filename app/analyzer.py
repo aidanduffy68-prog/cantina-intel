@@ -103,7 +103,7 @@ Return ONLY valid JSON with these exact keys: protocol_name, exploit_type, vulne
 
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-4o",
                 messages=[
                     {"role": "system", "content": "You are an expert blockchain security researcher with deep expertise in smart contract vulnerabilities, DeFi protocols, and crypto exploit analysis. You have extensive knowledge of common vulnerability patterns (reentrancy, flash loans, oracle manipulation, etc.), smart contract security best practices, and the technical mechanics of blockchain exploits. Your analysis is precise, technically accurate, and follows established security research methodologies. You think like a security auditor and categorize exploits using standard industry taxonomies."},
                     {"role": "user", "content": prompt}
