@@ -29,7 +29,11 @@ class ExploitAnalyzer:
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("OPENAI_API_KEY not found in environment variables")
-        self.client = OpenAI(api_key=api_key)
+        # Initialize OpenAI client with explicit parameters
+        self.client = OpenAI(
+            api_key=api_key,
+            timeout=60.0
+        )
     
     def analyze(self, exploit_text: str) -> ExploitAnalysis:
         """
